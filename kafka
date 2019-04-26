@@ -1,0 +1,121 @@
+#######################Server Basics#############################
+#唯一标识在集群中的ID，要求是正数。
+broker.id=0
+#服务端口，默认9092
+port=9092
+#监听地址，不设为所有地址
+host.name=172.168.63.91
+
+# 处理网络请求的最大线程数
+num.network.threads=2
+# 处理磁盘I/O的线程数
+num.io.threads=8
+# 一些后台线程数
+background.threads = 4
+# 等待IO线程处理的请求队列最大数
+queued.max.requests = 500
+
+#  socket的发送缓冲区（SO_SNDBUF）
+socket.send.buffer.bytes=1048576
+# socket的接收缓冲区 (SO_RCVBUF) 
+socket.receive.buffer.bytes=1048576
+# socket请求的最大字节数。为了防止内存溢出，message.max.bytes必然要小于
+socket.request.max.bytes = 104857600
+
+############################# Topic #############################
+# 每个topic的分区个数，更多的partition会产生更多的segment file
+num.partitions=2
+# 是否允许自动创建topic ，若是false，就需要通过命令创建topic
+auto.create.topics.enable =true
+# 一个topic ，默认分区的replication个数 ，不能大于集群中broker的个数。
+default.replication.factor =1
+# 消息体的最大大小，单位是字节
+message.max.bytes = 1000000
+
+############################# ZooKeeper #############################
+# Zookeeper quorum设置。如果有多个使用逗号分割
+zookeeper.connect=debugo01:2181,debugo02,debugo03
+# 连接zk的超时时间
+zookeeper.connection.timeout.ms=1000000
+# ZooKeeper集群中leader和follower之间的同步实际
+zookeeper.sync.time.ms = 2000
+
+############################# Log #############################
+#日志存放目录，多个目录使用逗号分割
+log.dirs=/var/log/kafka
+
+# 当达到下面的消息数量时，会将数据flush到日志文件中。默认10000
+#log.flush.interval.messages=10000
+# 当达到下面的时间(ms)时，执行一次强制的flush操作。interval.ms和interval.messages无论哪个达到，都会flush。默认3000ms
+#log.flush.interval.ms=1000
+# 检查是否需要将日志flush的时间间隔
+log.flush.scheduler.interval.ms = 3000
+
+# 日志清理策略（delete|compact）
+log.cleanup.policy = delete
+# 日志保存时间 (hours|minutes)，默认为7天（168小时）。超过这个时间会根据policy处理数据。bytes和minutes无论哪个先达到都会触发。
+log.retention.hours=168
+# 日志数据存储的最大字节数。超过这个时间会根据policy处理数据。
+#log.retention.bytes=1073741824
+
+# 控制日志segment文件的大小，超出该大小则追加到一个新的日志segment文件中（-1表示没有限制）
+log.segment.bytes=536870912
+# 当达到下面时间，会强制新建一个segment
+log.roll.hours = 24*7
+# 日志片段文件的检查周期，查看它们是否达到了删除策略的设置（log.retention.hours或log.retention.bytes）
+log.retention.check.interval.ms=60000
+
+# 是否开启压缩
+log.cleaner.enable=false
+# 对于压缩的日志保留的最长时间
+log.cleaner.delete.retention.ms = 1 day
+
+# 对于segment日志的索引文件大小限制
+log.index.size.max.bytes = 10 * 1024 * 1024
+#y索引计算的一个缓冲区，一般不需要设置。
+log.index.interval.bytes = 4096
+
+############################# replica #############################
+# partition management controller 与replicas之间通讯的超时时间
+controller.socket.timeout.ms = 30000
+# controller-to-broker-channels消息队列的尺寸大小
+controller.message.queue.size=10
+# replicas响应leader的最长等待时间，若是超过这个时间，就将replicas排除在管理之外
+replica.lag.time.max.ms = 10000
+# 是否允许控制器关闭broker ,若是设置为true,会关闭所有在这个broker上的leader，并转移到其他broker
+controlled.shutdown.enable = false
+# 控制器关闭的尝试次数
+controlled.shutdown.max.retries = 3
+# 每次关闭尝试的时间间隔
+controlled.shutdown.retry.backoff.ms = 5000
+
+# 如果relicas落后太多,将会认为此partition relicas已经失效。而一般情况下,因为网络延迟等原因,总会导致replicas中消息同步滞后。如果消息严重滞后,leader将认为此relicas网络延迟较大或者消息吞吐能力有限。在broker数量较少,或者网络不足的环境中,建议提高此值.
+replica.lag.max.messages = 4000
+#leader与relicas的socket超时时间
+replica.socket.timeout.ms= 30 * 1000
+# leader复制的socket缓存大小
+replica.socket.receive.buffer.bytes=64 * 1024
+# replicas每次获取数据的最大字节数
+replica.fetch.max.bytes = 1024 * 1024
+# replicas同leader之间通信的最大等待时间，失败了会重试
+replica.fetch.wait.max.ms = 500
+# 每一个fetch操作的最小数据尺寸,如果leader中尚未同步的数据不足此值,将会等待直到数据达到这个大小
+replica.fetch.min.bytes =1
+# leader中进行复制的线程数，增大这个数值会增加relipca的IO
+num.replica.fetchers = 1
+# 每个replica将最高水位进行flush的时间间隔
+replica.high.watermark.checkpoint.interval.ms = 5000
+
+# 是否自动平衡broker之间的分配策略
+auto.leader.rebalance.enable = false
+# leader的不平衡比例，若是超过这个数值，会对分区进行重新的平衡
+leader.imbalance.per.broker.percentage = 10
+# 检查leader是否不平衡的时间间隔
+leader.imbalance.check.interval.seconds = 300
+# 客户端保留offset信息的最大空间大小
+offset.metadata.max.bytes = 1024
+--------------------- 
+作者：mantis-it 
+来源：CSDN 
+原文：https://blog.csdn.net/gongxinju/article/details/72615237 
+版权声明：本文为博主原创文章，转载请附上博文链接！
