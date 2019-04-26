@@ -1,2 +1,2 @@
 # MyProfile
-my framework's profile
+my framework profile
