@@ -1,0 +1,31 @@
+#服务器端口
+server:
+  port: 8080
+
+
+# 应用ID
+spring:
+  application:
+    name: eureka-server
+
+
+# 日志配置
+logging:
+  config: classpath:logback.xml
+
+
+# 作为注册中心的配置
+eureka:
+  instance:
+    # eureka服务端的实例名称
+    hostname: eureka-server-8080
+  client:
+    # 是否检索服务服务
+    fetch-registry: false
+    # 是否注册本身
+    register-with-eureka: false
+    # 超时时间
+    eureka-server-connect-timeout-seconds: 5
+    # 注册中心地址
+    service-url:
+      defaultZone: http://${spring.application.name}:${server.port}/eureka/
