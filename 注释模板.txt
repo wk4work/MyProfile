@@ -1,0 +1,31 @@
+git 提交
+1.注释：使用插件 git commit template 格式化
+2.勾选格式化
+
+注释
+设置-编辑器-实时模板 / Setting-Editor-Live Templates
+1.类级：
+*
+ * TODO
+ * @author miracle.wang
+ * @date $date$ $time$
+ * @since v0.1
+ */
+ 
+ 2.方法级
+ *
+ * TODO$param$$return$
+ * @date $date$ $time$
+ * @since v0.1
+ */
+ 
+ 3.变量
+ data: date()
+ time: time()
+ param: groovyScript("def result = '';def params = \"${_1}\".replaceAll('[\\\\[|\\\\]|\\\\s]', '').split(',').toList(); for(i = 0; i < params.size(); i++) {if(params[i] != '')result+='* @param ' + params[i] + ((i < params.size() - 1) ? '\\r\\n ' : '')}; return result == '' ? null : '\\r\\n ' + result", methodParameters())
+ return: groovyScript("return \"${_1}\" == 'void' ? null : '\\r\\n * @return ' + \"${_1}\"", methodReturnType()) 
+ 
+ 代码风格：
+ 设置-编辑器-代码样式-导入方案 / Setting-Editor-Code Style-Import Scheme
+ GoogleStyle.xml
+ 
